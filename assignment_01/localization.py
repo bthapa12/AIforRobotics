@@ -64,7 +64,7 @@ def move(p, motions, p_move):
     for row in range(rows):
         q.append([])
         for col in range(cols):
-            tmp = p_move * p[(row-motions[0])%rows][(col-motions[0])%cols]
+            tmp = p_move * p[(row-motions[0])%rows][(col-motions[1])%cols]
             tmp = tmp + (1 - p_move) * p[row][col]
             q[row].append(tmp)
 
@@ -81,7 +81,7 @@ def sense(p, colors, measurements, sensor_right):
     s = sum(map(sum, q))
     for row in range(len(q)):
         for col in range(len(q[0])):
-            q[row][col] /= s
+            q[row][col] = q[row][col]/s
 
     return q
 
