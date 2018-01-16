@@ -49,15 +49,45 @@ def localize(colors, measurements, motions, sensor_right, p_move):
     p = [[pinit for row in range(len(colors[0]))] for col in range(len(colors))]
 
     # >>> Insert your code here <<<
+    for i in range(len(motions)):
+        p = move(p, motions[i], p_move)
+        p = sense(p, colors, measurements[i], sensor_right)
 
+    # >>> Insert your code here <<<
     return p
 
+def move(p, motions, p_move):
+    q = []
+    rows = len(p)
+    cols = len(p[0])
+
+    for row in range(rows):
+        q.append([])
+        for col in range(cols):
+            tmp = p_move * p[(row-motions[0])%rows][(col-motions[0])%cols]
+            tmp = tmp + (1 - p_move) * p[row][col]
+            q[row].append(tmp)
+
+    return q
+
+def sense(p, colors, measurements, sensor_right):
+    q = []
+    for row in range(len(p)):
+        q.append([])
+        for col in range(len(p[0])):
+            hit = (measurements == colors[row][col])
+            q[row].append(p[row][col] * ((hit * sensor_right) + (1-hit) * (1-sensor_right)))
+
+    s = sum(map(sum, q))
+    for row in range(len(q)):
+        for col in range(len(q[0])):
+            q[row][col] /= s
+
+    return q
 
 def show(p):
     rows = ['[' + ','.join(map(lambda x: '{0:.5f}'.format(x), r)) + ']' for r in p]
-    print
-    '[' + ',\n '.join(rows) + ']'
-
+    print '[' + ',\n '.join(rows) + ']'
 
 #############################################################
 # For the following test case, your output should be
