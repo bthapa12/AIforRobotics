@@ -4,7 +4,7 @@
 # matrices where indicated. Please do not delete or modify
 # any provided code OR comments. Good luck!
 
-from math import *
+from math import sqrt
 
 
 class matrix:
@@ -146,15 +146,15 @@ class matrix:
 
 ########################################
 
-def filter(x, P):
-    for n in range(len(measurements)):
+def filter(x, P, m):
+    for n in range(len(m)):
 
         # prediction
         x = (F * x) + u
         P = F * P * F.transpose()
 
         # measurement update
-        Z = matrix([measurements[n]])
+        Z = matrix([m[n]])
         y = Z.transpose() - (H * x)
         S = H * P * H.transpose() + R
         K = P * H.transpose() * S.inverse()
@@ -171,29 +171,43 @@ def filter(x, P):
 
 print("### 4-dimensional example ###")
 
-measurements = [[5., 10.], [6., 8.], [7., 6.], [8., 4.], [9., 2.], [10., 0.]]
-initial_xy = [4., 12.]
+measurements_1 = [[5., 10.], [6., 8.], [7., 6.], [8., 4.], [9., 2.], [10., 0.]]
+initial_xy_1 = [4., 12.]
+x_1 = matrix([[initial_xy_1[0]], [initial_xy_1[1]], [0.], [0.]])  # initial state (location and velocity)
 
-# measurements = [[1., 4.], [6., 0.], [11., -4.], [16., -8.]]
-# initial_xy = [-4., 8.]
+measurements_2 = [[1., 4.], [6., 0.], [11., -4.], [16., -8.]]
+initial_xy_2 = [-4., 8.]
+x_2 = matrix([[initial_xy_2[0]], [initial_xy_2[1]], [0.], [0.]])  # initial state (location and velocity)
 
-# measurements = [[1., 17.], [1., 15.], [1., 13.], [1., 11.]]
-# initial_xy = [1., 19.]
+measurements_3 = [[1., 17.], [1., 15.], [1., 13.], [1., 11.]]
+initial_xy_3 = [1., 19.]
+x_3 = matrix([[initial_xy_3[0]], [initial_xy_3[1]], [0.], [0.]])  # initial state (location and velocity)
 
 dt = 0.1
-
-x = matrix([[initial_xy[0]], [initial_xy[1]], [0.], [0.]])  # initial state (location and velocity)
 u = matrix([[0.], [0.], [0.], [0.]])    # external motion
 
 # DO NOT MODIFY ANYTHING ABOVE HERE ####
 # fill this in, remember to use the matrix() function!: ####
 
-P =  # initial uncertainty: 0 for positions x and y, 1000 for the two velocities
-F =  # next state function: generalize the 2d version to 4d
-H =  # measurement function: reflect the fact that we observe x and y but not the two velocities
-R =  # measurement uncertainty: use 2x2 matrix with 0.1 as main diagonal
-Im =  # 4d identity matrix
+# initial uncertainty: 0 for positions x and y, 1000 for the two velocities
+P = matrix([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 1000, 0], [0, 0, 0, 1000]])
+
+# next state function: generalize the 2d version to 4d
+F = matrix([[1, 0, dt, 0], [0, 1, 0, dt], [0, 0, 1, 0], [0, 0, 0, 1]])
+
+# measurement function: reflect the fact that we observe x and y but not the two velocities
+H = matrix([[1, 0, 0, 0], [0, 1, 0, 0]])
+
+# measurement uncertainty: use 2x2 matrix with 0.1 as main diagonal
+R = matrix([[0.1, 0], [0, 0.1]])
+
+# 4d identity matrix
+Im = matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
 
 # DO NOT MODIFY ANYTHING HERE #######
 
-filter(x, P)
+x = [x_1, x_2, x_3]
+measurements = [measurements_1, measurements_2, measurements_3]
+
+for i in range(len(measurements)):
+    filter(x[i], P, measurements[i])
