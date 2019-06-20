@@ -43,8 +43,10 @@
 #  [1,0] - down
 #  [-1,0] - up
 
+
 def localize(colors, measurements, motions, sensor_right, p_move):
-    # initializes p to a uniform distribution over a grid of the same dimensions as colors
+    # initializes p to a uniform distribution over a grid of the same
+    # dimensions as colors
     pinit = 1.0 / float(len(colors)) / float(len(colors[0]))
     p = [[pinit for row in range(len(colors[0]))] for col in range(len(colors))]
 
@@ -56,6 +58,7 @@ def localize(colors, measurements, motions, sensor_right, p_move):
     # >>> Insert your code here <<<
     return p
 
+
 def move(p, motions, p_move):
     q = []
     rows = len(p)
@@ -64,11 +67,12 @@ def move(p, motions, p_move):
     for row in range(rows):
         q.append([])
         for col in range(cols):
-            tmp = p_move * p[(row-motions[0])%rows][(col-motions[1])%cols]
+            tmp = p_move * p[(row-motions[0]) % rows][(col-motions[1]) % cols]
             tmp = tmp + (1 - p_move) * p[row][col]
             q[row].append(tmp)
 
     return q
+
 
 def sense(p, colors, measurements, sensor_right):
     q = []
@@ -85,9 +89,10 @@ def sense(p, colors, measurements, sensor_right):
 
     return q
 
+
 def show(p):
     rows = ['[' + ','.join(map(lambda x: '{0:.5f}'.format(x), r)) + ']' for r in p]
-    print '[' + ',\n '.join(rows) + ']'
+    print('[' + ',\n '.join(rows) + ']')
 
 #############################################################
 # For the following test case, your output should be
@@ -96,6 +101,7 @@ def show(p):
 #  [0.00739, 0.00894, 0.11272, 0.35350, 0.04065],
 #  [0.00910, 0.00715, 0.01434, 0.04313, 0.03642]]
 # (within a tolerance of +/- 0.001 for each entry)
+
 
 colors = [['R', 'G', 'G', 'R', 'R'],
           ['R', 'R', 'G', 'R', 'R'],
